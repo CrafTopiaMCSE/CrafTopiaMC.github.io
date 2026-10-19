@@ -1,0 +1,157 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - CrafTopia</title>
+  •
+  <style>
+    .admin-panel {
+      max-width: 600px;
+      margin: 40px auto;
+      background: #1A1A1A;
+      border: 2px solid #FF6B00;
+      border-radius: 12px;
+      padding: 30px;
+    }
+    .admin-panel h2 {
+      color: #FF6B00;
+      margin-bottom: 25px;
+    }
+    .admin-panel label {
+      display: block;
+      color: #FF6B00;
+      margin-top: 15px;
+      margin-bottom: 5px;
+    }
+    .admin-panel input, .admin-panel textarea {
+      width: 100%;
+      padding: 10px;
+      background: #0D0D0D;
+      color: #FFF;
+      border: 1px solid #333;
+      border-radius: 5px;
+      font-size: 15px;
+    }
+    .admin-panel .btn {
+      background: #FF6B00;
+      color: #0D0D0D;
+      border: none;
+      padding: 12px 25px;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 20px;
+      font-size: 15px;
+    }
+    .admin-panel .btn:hover {
+      background: #B34700;
+    }
+    .item-list {
+      margin-top: 20px;
+    }
+    .item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #0D0D0D;
+      padding: 10px 15px;
+      border-radius: 5px;
+      margin-bottom: 8px;
+      border: 1px solid #333;
+    }
+    .item .del {
+      background: #e74c3c;
+      color: #fff;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .back {
+      display: inline-block;
+      margin-top: 15px;
+      color: #FF6B00;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    CrafTopia Admin
+
+    <nav>
+      بازگشت به سایت (index.html)
+    </nav>
+  </header>
+
+    🛠 پنل مدیریت
+
+    <label>آدرس سرور (IP)</label>
+    <input type="text" id="ipInput" placeholder="مثلاً play.craftopia.net">
+
+    <label>نام سایت</label>
+    <input type="text" id="nameInput" placeholder="CrafTopia">
+
+    <label>توضیحات</label>
+    <textarea id="descInput" rows="2" placeholder="توضیح کوتاه سایت"></textarea>
+
+    <label>گیم‌مود جدید (نام)</label>
+    <input type="text" id="gmName" placeholder="مثلاً Survival">
+    <label>توضیحات گیم‌مود</label>
+    <input type="text" id="gmDesc" placeholder="مثلاً بقا در دنیای باز">
+
+    <button class="btn" onclick="addGamemode()">➕ اضافه کردن گیم‌مود</button>
+
+    <button class="btn" onclick="saveAll()" style="width:100%;">💾 ذخیره همه</button>
+
+  <script src="config.js"></script>
+  <script>
+    loadConfig();
+
+    document.getElementById('ipInput').value = CONFIG.serverIP || '';
+    document.getElementById('nameInput').value = CONFIG.siteName;
+    document.getElementById('descInput').value = CONFIG.description;
+
+    function renderGmList() {
+      const list = document.getElementById('gmList');
+      if (CONFIG.gamemodes.length === 0) {
+        list.innerHTML = 'هنوز گیم‌مودی نیست.
+';
+        return;
+      }
+      list.innerHTML = CONFIG.gamemodes.map((m, i) => `
+
+          ${m.name} — ${m.description}
+          <button class="del" onclick="removeGm(${i})">✖</button>
+
+      `).join('');
+    }
+    renderGmList();
+
+    function addGamemode() {const name = document.getElementById('gmName').value.trim();
+      const desc = document.getElementById('gmDesc').value.trim();
+      if (!name) { alert('نام گیم‌مود رو بنویس!'); return; }
+      CONFIG.gamemodes.push({ name, description: desc });
+      document.getElementById('gmName').value = '';
+      document.getElementById('gmDesc').value = '';
+      renderGmList();
+    }
+
+    function removeGm(i) {
+      CONFIG.gamemodes.splice(i, 1);
+      renderGmList();
+    }
+
+    function saveAll() {
+      CONFIG.serverIP = document.getElementById('ipInput').value.trim();
+      CONFIG.siteName = document.getElementById('nameInput').value.trim();
+      CONFIG.description = document.getElementById('descInput').value.trim();
+      saveConfig();
+      alert('✅ ذخیره شد!');
+    }
+  </script>
+</body>
+</html>
+```
